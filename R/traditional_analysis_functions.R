@@ -80,9 +80,9 @@ diff_analysis_lefse <- function(ps_new, secondalpha=0.05) {
 
 
 
-#' Title
+#' Removes confusing multi level annotations from lefse analysis
 #'
-#' @param diffres
+#' @param diffres - differential results analysis from diff_analysis_lefse
 #'
 #' @return
 #' @export
@@ -127,7 +127,7 @@ rewrite_annotation <- function(diffres){
   return(diffres)
 }
 
-#' Title
+#' Filters lefse analysis to only contain one level of analysis
 #'
 #' @param diffres
 #' @param level
@@ -169,7 +169,7 @@ make_manual_scale <- function(f){
 }
 
 
-#' Title
+#' Returns a plot of lefse candidates - abundances separated by group
 #'
 #' @param diffres
 #'
@@ -192,7 +192,7 @@ lefse_plot <- function(diffres) {
   return(plotes_ab)
 }
 
-#' Title
+#' Convenience function for extracting p-values from lefse analysis
 #'
 #' @param diffres
 #'
@@ -205,9 +205,15 @@ return_p_values <- function(diffres){
   diffres@kwres[diffres@kwres$f %in% diffres@mlres$f,]
 }
 
-#' Title
+#' Runs unifrac distance beta diversity analysis
 #'
 #' @param ps_rare
+#' @param formula - a formula for the modeling. should be of the form
+#' unifrac_dist ~ covariates. For example: #' unifrac_dist ~ sample_data(ps_rare)$disease_group_for_study
+#' @param weighted - TRUE or FALSE. Whether to use weighted unifrac distance or not.
+#' Default is unweighted.
+#' @param seed - seed value for set.seed
+#'
 #'
 #' @return
 #' @export
@@ -216,17 +222,17 @@ return_p_values <- function(diffres){
 beta_diversity <- function(ps_rare, formula=NULL, weighted=FALSE, seed=100){
   set.seed(seed)
 
-  uwunifrac_dist = phyloseq::distance(ps_rare, method="unifrac", weighted=weighted)
+  unifrac_dist = phyloseq::distance(ps_rare, method="unifrac", weighted=weighted)
 
   if(is.null(formula)){
-    formula <- uwunifrac_dist ~ sample_data(ps_rare)$disease_group_for_study
+    formula <- unifrac_dist ~ sample_data(ps_rare)$disease_group_for_study
   }
 
   adonis(formula, permutations = 10000)
 
 }
 
-#' Title
+#' Returns alpha diversity measures and pvalues
 #'
 #' @param ps_rare
 #'
@@ -284,9 +290,3 @@ calc_alpha_diversity <- function(ps_rare, subject_id=subject_id){
   return(test_frame)
 }
 
-
-return_rel_abundances <- function(candidate_frame, ps_rare, level=ASV){
-
-  #candidate_bugs <-
-
-}

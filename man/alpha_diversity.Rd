@@ -2,7 +2,7 @@
 % Please edit documentation in R/traditional_analysis_functions.R
 \name{alpha_diversity}
 \alias{alpha_diversity}
-\title{Title}
+\title{Returns alpha diversity measures and pvalues}
 \usage{
 alpha_diversity(ps_rare)
 }
@@ -13,5 +13,5 @@ alpha_diversity(ps_rare)
 
 }
 \description{
-Title
+Returns alpha diversity measures and pvalues
 }

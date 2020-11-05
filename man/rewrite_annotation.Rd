@@ -2,16 +2,16 @@
 % Please edit documentation in R/traditional_analysis_functions.R
 \name{rewrite_annotation}
 \alias{rewrite_annotation}
-\title{Title}
+\title{Removes confusing multi level annotations from lefse analysis}
 \usage{
 rewrite_annotation(diffres)
 }
 \arguments{
-\item{diffres}{}
+\item{diffres}{- differential results analysis from diff_analysis_lefse}
 }
 \value{
 
 }
 \description{
-Title
+Removes confusing multi level annotations from lefse analysis
 }

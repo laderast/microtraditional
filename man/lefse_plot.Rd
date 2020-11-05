@@ -2,7 +2,7 @@
 % Please edit documentation in R/traditional_analysis_functions.R
 \name{lefse_plot}
 \alias{lefse_plot}
-\title{Title}
+\title{Returns a plot of lefse candidates - abundances separated by group}
 \usage{
 lefse_plot(diffres)
 }
@@ -13,5 +13,5 @@ lefse_plot(diffres)
 
 }
 \description{
-Title
+Returns a plot of lefse candidates - abundances separated by group
 }

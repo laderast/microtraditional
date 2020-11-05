@@ -2,7 +2,7 @@
 % Please edit documentation in R/traditional_analysis_functions.R
 \name{keep_levels}
 \alias{keep_levels}
-\title{Title}
+\title{Filters lefse analysis to only contain one level of analysis}
 \usage{
 keep_levels(diffres, level = "Species")
 }
@@ -13,5 +13,5 @@ keep_levels(diffres, level = "Species")
 
 }
 \description{
-Title
+Filters lefse analysis to only contain one level of analysis
 }

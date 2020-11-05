@@ -2,7 +2,7 @@
 % Please edit documentation in R/traditional_analysis_functions.R
 \name{return_p_values}
 \alias{return_p_values}
-\title{Title}
+\title{Convenience function for extracting p-values from lefse analysis}
 \usage{
 return_p_values(diffres)
 }
@@ -13,5 +13,5 @@ return_p_values(diffres)
 
 }
 \description{
-Title
+Convenience function for extracting p-values from lefse analysis
 }

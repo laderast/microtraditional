@@ -2,16 +2,22 @@
 % Please edit documentation in R/traditional_analysis_functions.R
 \name{beta_diversity}
 \alias{beta_diversity}
-\title{Title}
+\title{Runs unifrac distance beta diversity analysis}
 \usage{
-beta_diversity(ps_rare)
+beta_diversity(ps_rare, formula = NULL, weighted = FALSE, seed = 100)
 }
 \arguments{
-\item{ps_rare}{}
+\item{formula}{- a formula for the modeling. should be of the form
+unifrac_dist ~ covariates. For example: #' unifrac_dist ~ sample_data(ps_rare)$disease_group_for_study}
+
+\item{weighted}{- TRUE or FALSE. Whether to use weighted unifrac distance or not.
+Default is unweighted.}
+
+\item{seed}{- seed value for set.seed}
 }
 \value{
 
 }
 \description{
-Title
+Runs unifrac distance beta diversity analysis
 }
