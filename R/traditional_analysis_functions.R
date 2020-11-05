@@ -61,7 +61,7 @@ diff_analysis_lefse <- function(ps_new, secondalpha=0.05) {
   rownames(tx_tb) <- rownames(data.frame(tax_table(ps_new)))
   tax_table(ps_new) <- tax_table(as.matrix(tx_tb))
 
-  diffres <- diff_analysis(obj=ps_new, classgroup="disease_group_for_study",
+  diffres <- MicrobiotaProcess::diff_analysis(obj=ps_new, classgroup="disease_group_for_study",
                            mlfun="lda",
                            filtermod="pvalue",
                            firstcomfun = "kruskal.test",
@@ -192,17 +192,37 @@ lefse_plot <- function(diffres) {
   return(plotes_ab)
 }
 
+#' Title
+#'
+#' @param diffres
+#'
+#' @return
+#' @export
+#'
+#' @examples
 return_p_values <- function(diffres){
 
   diffres@kwres[diffres@kwres$f %in% diffres@mlres$f,]
 }
 
-beta_diversity <- function(ps_rare){
-  uwunifrac_dist = phyloseq::distance(ps_rare, method="unifrac", weighted=F)
+#' Title
+#'
+#' @param ps_rare
+#'
+#' @return
+#' @export
+#'
+#' @examples
+beta_diversity <- function(ps_rare, formula=NULL, weighted=FALSE, seed=100){
+  set.seed(seed)
 
-  set.seed = 100
-  adonis(uwunifrac_dist ~ sample_data(ps_rare)$disease_group_for_study,
-         permutations = 10000)
+  uwunifrac_dist = phyloseq::distance(ps_rare, method="unifrac", weighted=weighted)
+
+  if(is.null(formula)){
+    formula <- uwunifrac_dist ~ sample_data(ps_rare)$disease_group_for_study
+  }
+
+  adonis(formula, permutations = 10000)
 
 }
 
