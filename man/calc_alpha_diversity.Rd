@@ -2,7 +2,7 @@
 % Please edit documentation in R/traditional_analysis_functions.R
 \name{calc_alpha_diversity}
 \alias{calc_alpha_diversity}
-\title{Title}
+\title{Calculates alpha diversity using three calculations}
 \usage{
 calc_alpha_diversity(ps_rare, subject_id = subject_id)
 }
@@ -13,5 +13,5 @@ calc_alpha_diversity(ps_rare, subject_id = subject_id)
 
 }
 \description{
-Title
+Calculates alpha diversity using three calculations
 }

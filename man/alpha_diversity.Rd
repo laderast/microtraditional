@@ -7,11 +7,12 @@
 alpha_diversity(ps_rare)
 }
 \arguments{
-\item{ps_rare}{}
+\item{ps_rare}{- phyloseq object to calculate alpha diversity on}
 }
 \value{
 
 }
 \description{
-Returns alpha diversity measures and pvalues
+Given a ps object, calculate alpha diversity on it and run a t-test
+on group
 }

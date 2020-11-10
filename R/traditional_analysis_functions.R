@@ -11,7 +11,8 @@ alpha_plot <- function(ps_anspo_hc_rare) {
                               x= 'disease_group_for_study',
                               measures = c("Observed", "Shannon",
                                            "InvSimpson")) +
-    geom_boxplot(aes(fill=disease_group_for_study)) + theme(legend.position="none")
+    geom_boxplot(aes(fill=disease_group_for_study)) +
+    theme(legend.position="none")
 }
 
 
@@ -43,7 +44,7 @@ beta_plot <- function(ps_rare, ps_ord) {
 }
 
 
-#' Title
+#' Run lefse analysis on phyloseq object with cutoffs
 #'
 #' @param ps_new
 #' @param secondalpha
@@ -52,7 +53,7 @@ beta_plot <- function(ps_rare, ps_ord) {
 #' @export
 #'
 #' @examples
-diff_analysis_lefse <- function(ps_new, secondalpha=0.05) {
+diff_analysis_lefse <- function(ps_new, secondalpha=0.05, firstalpha=0.1) {
   sample_data(ps_new)$disease_group_for_study <- factor(sample_data(ps_new)$disease_group_for_study)
 
   tx_tb <- data.frame(tax_table(ps_new))
@@ -65,7 +66,7 @@ diff_analysis_lefse <- function(ps_new, secondalpha=0.05) {
                            mlfun="lda",
                            filtermod="pvalue",
                            firstcomfun = "kruskal.test",
-                           firstalpha=0.1,
+                           firstalpha=firstalpha,
                            strictmod=TRUE,
                            secondcomfun = "wilcox.test",
                            subclmin=3,
@@ -77,14 +78,11 @@ diff_analysis_lefse <- function(ps_new, secondalpha=0.05) {
 }
 
 
-
-
-
 #' Removes confusing multi level annotations from lefse analysis
 #'
 #' @param diffres - differential results analysis from diff_analysis_lefse
 #'
-#' @return
+#' @return diffres results with rewritten annotations
 #' @export
 #'
 #' @examples
@@ -129,8 +127,9 @@ rewrite_annotation <- function(diffres){
 
 #' Filters lefse analysis to only contain one level of analysis
 #'
-#' @param diffres
-#' @param level
+#' @param diffres - differential results object processed
+#' with @code{rewrite_annotation}
+#' @param level - level of analysis to retain - default is Species
 #'
 #' @return
 #' @export
@@ -234,7 +233,10 @@ beta_diversity <- function(ps_rare, formula=NULL, weighted=FALSE, seed=100){
 
 #' Returns alpha diversity measures and pvalues
 #'
-#' @param ps_rare
+#' Given a ps object, calculate alpha diversity on it and run a t-test
+#' on group
+#'
+#' @param ps_rare - phyloseq object to calculate alpha diversity on
 #'
 #' @return
 #' @export
@@ -266,7 +268,7 @@ alpha_diversity <- function(ps_rare){
 
 }
 
-#' Title
+#' Calculates alpha diversity using three calculations
 #'
 #' @param ps_rare
 #' @param subject_id
@@ -290,3 +292,83 @@ calc_alpha_diversity <- function(ps_rare, subject_id=subject_id){
   return(test_frame)
 }
 
+
+#' Given alpha values and basdai
+#'
+#' @param iga_basdai
+#' @param level
+#'
+#' @return
+#' @export
+#'
+#' @examples
+run_basdai_iga_correlations <- function(iga_basdai, level=Phylum_Genus_ASV, method="spearman") {
+  iga_basdai %>%
+    mutate(bas_correlation = list(cor.test(data$basdai, data$IgA_index, method = method)),
+           bas_pos_corr = list(cor.test(data$basdai, data$`IgA +`,  method = method)),
+           bas_neg_corr = list(cor.test(data$basdai, data$`IgA -`,  method = method))) %>%
+    select({{level}}, data, bas_correlation, bas_pos_corr, bas_neg_corr) %>%
+    mutate(cor_iga = bas_correlation$estimate,
+           pvalue_iga = bas_correlation$p.value,
+           cor_iga_neg = bas_neg_corr$estimate,
+           pvalue_iga_neg = bas_neg_corr$p.value,
+           cor_iga_pos = bas_pos_corr$estimate,
+           pvalue_iga_pos = bas_pos_corr$p.value)
+}
+
+#' Correlate iga correlations
+#'
+#' @param iga_basdai_alpha - IgA Index calculations to correlate
+#' @param level - level to calculate correlations on
+#' @param method - correlation method to use - passed on to @code{cor.test}.
+#' Currently "spearman" (default) or "pearson".
+#'
+#' @return
+#' @export
+#'
+#' @examples
+run_basdai_alpha_correlations <- function(iga_basdai_alpha, level=Phylum_Genus_ASV, method="spearman") {
+  iga_basdai_alpha %>%
+    mutate(bas_correlation = list(cor.test(data$basdai, data$IgA_index,  method = method)),
+           bas_pos_corr = list(cor.test(data$basdai, data$`IgA +`,  method = method)),
+           bas_neg_corr = list(cor.test(data$basdai, data$`IgA -`,  method = method))) %>%
+    select({{level}}, data, bas_correlation, bas_pos_corr, bas_neg_corr) %>%
+    mutate(cor_iga = bas_correlation$estimate,
+           pvalue_iga = bas_correlation$p.value,
+           cor_iga_neg = bas_neg_corr$estimate,
+           pvalue_iga_neg = bas_neg_corr$p.value,
+           cor_iga_pos = bas_pos_corr$estimate,
+           pvalue_iga_pos = bas_pos_corr$p.value)
+}
+
+#' Filter correlations based on cutoff and plot them
+#'
+#' @param basdai_iga_corr - correlation output from \code{run_basdai_correlations}
+#' @param pvalue_column
+#' @param variable
+#' @param alpha
+#' @param level
+#'
+#' @return
+#' @export
+#'
+#' @examples
+filter_and_plot_correlations <- function(basdai_iga_corr, pvalue_column=pvalue_iga,
+                                         variable=IgA_index,
+                                         alpha=0.05, level=Phylum_Genus_ASV){
+  basdai_iga_corr %>%
+    filter({{pvalue_column}} < 0.05) %>%
+    tidyr::unnest(cols=c(data)) %>%
+    ggplot(aes(y=basdai, #x=IgA_index)) +
+               x= {{variable}})) +
+    geom_point() +
+    geom_smooth(method = "lm") + facet_wrap(vars({{level}}))
+
+}
+
+
+return_sequences <- function(basdai_iga_corr, ps, level=Phylum_Genus_ASV){
+#   basdai_iga_corr %>%
+
+
+}

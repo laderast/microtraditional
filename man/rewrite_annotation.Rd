@@ -10,7 +10,7 @@ rewrite_annotation(diffres)
 \item{diffres}{- differential results analysis from diff_analysis_lefse}
 }
 \value{
-
+diffres results with rewritten annotations
 }
 \description{
 Removes confusing multi level annotations from lefse analysis

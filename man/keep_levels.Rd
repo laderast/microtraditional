@@ -7,7 +7,10 @@
 keep_levels(diffres, level = "Species")
 }
 \arguments{
-\item{level}{}
+\item{diffres}{- differential results object processed
+with @code{rewrite_annotation}}
+
+\item{level}{- level of analysis to retain - default is Species}
 }
 \value{
 

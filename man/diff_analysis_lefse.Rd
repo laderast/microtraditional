@@ -2,9 +2,9 @@
 % Please edit documentation in R/traditional_analysis_functions.R
 \name{diff_analysis_lefse}
 \alias{diff_analysis_lefse}
-\title{Title}
+\title{Run lefse analysis on phyloseq object with cutoffs}
 \usage{
-diff_analysis_lefse(ps_new, secondalpha = 0.05)
+diff_analysis_lefse(ps_new, secondalpha = 0.05, firstalpha = 0.1)
 }
 \arguments{
 \item{secondalpha}{}
@@ -13,5 +13,5 @@ diff_analysis_lefse(ps_new, secondalpha = 0.05)
 
 }
 \description{
-Title
+Run lefse analysis on phyloseq object with cutoffs
 }
